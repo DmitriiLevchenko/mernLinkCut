@@ -17,15 +17,12 @@ authRouter.post(
   ],
   async (req, res) => {
     try {
-      console.log("Auth Body",req);
       const validationErrors = validationResult(req);
       if (!validationErrors.isEmpty()) {
-        return res
-          .status(400)
-          .json({
-            errors: validationErrors.array(),
-            message: "incorrect data",
-          });
+        return res.status(400).json({
+          errors: validationErrors.array(),
+          message: "incorrect data",
+        });
       }
       const { email, password } = req.body;
 
@@ -42,7 +39,7 @@ authRouter.post(
       const user = new User({ email, password: hashedPassword });
 
       await user.save();
-      res.status(201).json({ message: "User created" });
+      res.status(201).json({ message: "User created", ok: true });
     } catch (e) {
       res
         .status(500)
@@ -58,35 +55,35 @@ authRouter.post(
   ],
   async (req, res) => {
     try {
-     
       const validationErrors = validationResult(req);
       if (!validationErrors.isEmpty()) {
-        return res
-          .status(400)
-          .json({
-            errors: validationErrors.array(),
-            message: "incorrect data on login",
-          });
+        return res.status(400).json({
+          errors: validationErrors.array(),
+          message: "incorrect data on login",
+        });
       }
       const { email, password } = req.body;
-
       const user = await User.findOne({ email });
 
       if (!user) {
         return res.status(400).json({ message: "User is not exists" });
       }
-
-      const isMatch = await compare(password, user.password);
-
+      const isMatch = await bycrpt.compare(password, user.password);
       if (!isMatch) {
         return res.status(400).json({ message: "incorrect password or Email" });
       }
-
-      const token = jwt.sign({ userId: user.id }, config.jwtSecret, {
+      const token = jwt.sign({ userId: user._id }, config.jwtSecret, {
         expiresIn: "1h",
       });
 
-      res.status(200).json({ token, userId: user.id });
+      res
+        .status(200)
+        .json({
+          token,
+          userId: user._id,
+          ok: true,
+          message: "Log in sucessful",
+        });
     } catch (e) {
       res
         .status(500)
