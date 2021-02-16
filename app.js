@@ -13,6 +13,7 @@ const app = express();
 //app modules
 app.use(express.json({ extended: true }));
 app.use("/api/auth", authRoutes);
+app.use("/api/link", linkRoutes);
 
 const start = async () => {
   try {
