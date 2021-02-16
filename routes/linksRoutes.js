@@ -19,7 +19,7 @@ linksRouter.post("/generate", authMiddleware, async (req, res) => {
     const existing = await Link.findOne({ from });
 
     if (existing) {
-      res.json({link:existing,ok:true});
+      res.json({ link: existing, ok: true });
     }
 
     const to = baseUrl + "/t/" + code;
@@ -32,7 +32,7 @@ linksRouter.post("/generate", authMiddleware, async (req, res) => {
 
     await link.save();
 
-    res.status(201).json({ link,  ok:true});
+    res.status(201).json({ link, ok: true });
   } catch (e) {
     res.status(500).json({ message: `something went wrong:( ${e.message} )` });
   }
@@ -40,7 +40,7 @@ linksRouter.post("/generate", authMiddleware, async (req, res) => {
 linksRouter.get("/", authMiddleware, async (req, res) => {
   try {
     links = await Link.find({ owner: req.user.userId });
-    res.status(200).json({ links });
+    res.status(200).json({ links, ok: true });
   } catch (e) {
     res.status(500).json({ message: `something went wrong:( ${e.message} )` });
   }
@@ -48,7 +48,7 @@ linksRouter.get("/", authMiddleware, async (req, res) => {
 linksRouter.get("/:id", async (req, res) => {
   try {
     links = await Link.findById(req.params.id);
-    res.status(200).json({ links });
+    res.status(200).json({ links, ok: true });
   } catch (e) {
     res.status(500).json({ message: `something went wrong:( ${e.message} )` });
   }

@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 //Routes
 const authRoutes = require("./routes/authRouters.js");
 const linkRoutes = require("./routes/linksRoutes.js");
+const redirectRoutes = require("./routes/redirectRoutes.js");
 //middlewares
 
 //settings
@@ -14,6 +15,7 @@ const app = express();
 app.use(express.json({ extended: true }));
 app.use("/api/auth", authRoutes);
 app.use("/api/link", linkRoutes);
+app.use("/t", redirectRoutes);
 
 const start = async () => {
   try {
